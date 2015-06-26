@@ -1,1 +1,2 @@
-# customize-dialog
+## 基于移动端的自定义对话框
+> 原生js的首个作品，目前只初步完成了prom，alert，confirm 3个功能。还有很多地方有待改进。
