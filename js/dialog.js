@@ -249,34 +249,33 @@
 	 */
 	function cdConfirm(text, sure, cancel, callback) {
 
+		var cfText, cfSure, cfCancel, cfCallback, data, alertHtml;
+
 		if (!isFixed) {
 			unFixed();
 		}
 
-		var data, alertHtml, callback;
+		cfText = text || "哎呀，我好想忘了要说啥了";
 
 		if (typeof sure === "function") {
-			data = {
-				text: text || "哎呀，我好想忘了要说啥了",
-				sure: "确定",
-				cancel: "取消"
-			};
-			callback = sure;
+			cfSure = "确定";
+			cfCancel = "取消";
+			cfCallback = sure;
 		} else if (typeof cancel === "function") {
-			data = {
-				text: text || "哎呀，我好想忘了要说啥了",
-				sure: sure || "确定",
-				cancel: "取消"
-			};
-			callback = cancel;
+			cfSure = sure || "确定";
+			cfCancel = "取消";
+			cfCallback = cancel;
 		} else if (typeof callback === "function") {
-			data = {
-				text: text || "哎呀，我好想忘了要说啥了",
-				sure: sure || "确定",
-				cancel: cancel || "取消"
-			};
-			callback = callback;
+			cfSure = sure || "确定";
+			cfCancel = cancel || "取消";
+			cfCallback = callback;
 		}
+
+		data = {
+			text: cfText,
+			sure: cfSure,
+			cancel: cfCancel
+		};
 
 		alertHtml = _utils.template(confirm_tpl, data);
 
@@ -291,14 +290,14 @@
 
 			_utils.removeClass(mask, "display");
 
-			callback( true );
+			cfCallback( true );
 		});
 
 		_utils.listen(cancelBtn, "click", function() {
 
 			_utils.removeClass(mask, "display");
 
-			callback( false );
+			cfCallback( false );
 		});
 	};
 

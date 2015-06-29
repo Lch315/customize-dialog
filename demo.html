@@ -13,11 +13,11 @@
 <script type="text/javascript">
 	FastClick.attach(document.body);
 
+	CD.config({delay: 2000});
+
 	// CD.alert("要去百度首页吗", "是的，你别拦我", "https://www.baidu.com");
 
 	// CD.prom("我去");
-
-	CD.config({delay: 2000});
 
 	CD.confirm("去不去？", "去啊", "不去", function( f ) {
 		if (f) {
