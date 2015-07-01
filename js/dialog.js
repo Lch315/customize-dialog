@@ -1,10 +1,18 @@
 (function(global, doc, factory) {
 
-	//初始化CD模块
-	var CD = factory(global, doc);
+	if (typeof define === "function" && define.amd) {
+		// 设置AMD模块
+		define(function() {
+			return factory(global, doc);
+		});
 
-	//提供接口
-	window.CD = window.CD || CD;
+	} else {
+		//初始化CD模块
+		var CD = factory(global, doc);
+
+		//提供window接口
+		window.CD = window.CD || CD;
+	}
 
 }(window, document, function(window, document) {
 
