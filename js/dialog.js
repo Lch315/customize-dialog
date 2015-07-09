@@ -113,16 +113,31 @@
 
 		//很简单的一个模板引擎
 		template: function(tpl, data) {
-			return tpl.replace(/<%=([^%>]+)?%>/g, function(s0, s1) {
-				return data[s1];
+			var reg = /<%([^%>]+)?%>/g, 
+		        regOut = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, 
+		        sources = 'var r=[];\n', 
+		        index = 0,
+		        _t;
+
+			tpl.replace(reg, function(match, source, offset) {
+		        sources += (_t = tpl.slice(index, offset)) ? 'r.push("' + _t.replace(/"/g, '\\"') + '");\n' : '';
+		        sources += source.match(regOut) ? source + '\n' : 'r.push(' + source + ');\n';
+		        index = offset + match.length;
 			});
+
+			sources += (_t = tpl.slice(index)) ? 'r.push("' + _t.replace(/"/g, '\\"') + '");\n' : '';
+		    sources += 'return r.join("");';
+
+		    sources = 'with(obj){\n' + sources + '}\n';
+
+		    return new Function('obj', sources.replace(/[\r\t\n]/g, '')).call(this, data);
 		}
 	}
 
 	//对话框模板
-	var prom_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text dialog-prom-text"><%=text%></div></div>',
-		alert_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text"><%=text%></div><div id="dialog-handle" class="dialog-handle"><span id="dialog-sure"><%=sure%></span></div></div>',
-		confirm_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text"><%=text%></div><div id="dialog-handle" class="dialog-handle"><span id="dialog-sure"><%=sure%></span><span id="dialog-cancel"><%=cancel%></span></div></div>',
+	var prom_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text dialog-prom-text"><%text%></div></div>',
+		alert_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text"><%text%></div><div id="dialog-handle" class="dialog-handle"><span id="dialog-sure"><%sure%></span></div></div>',
+		confirm_tpl = '<div id="dialog-box" class="dialog-box"><div class="dialog-text"><%text%></div><div id="dialog-handle" class="dialog-handle"><span id="dialog-sure"><%sure%></span><span id="dialog-cancel"><%cancel%></span></div></div>',
 		dialogCss = '.dialog-mask{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background-color:rgba(0,0,0,.5);font-size:14px;}.dialog-mask.display{display:block;}.dialog-box{position:absolute;top:30%;left:50%;width:60%;margin-left:-30%;box-shadow:0 0 5px rgba(64,64,64,.6);background-color:#fff;}.dialog-text{padding:30px 0;text-align:center;line-height:20px;}.dialog-prom-text{padding:15px 0;}.dialog-handle{display:-webkit-box;display:-webkit-flex;display:flex;border-top:1px solid #e5e5e5;}.dialog-handle span{display:block;-webkit-box-flex:1;-webkit-flex:1;flex:1;width:0;text-align:center;line-height:36px;}.dialog-handle span:first-child{border-right:1px solid #e5e5e5;}',
 		mask;
 
