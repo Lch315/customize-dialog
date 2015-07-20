@@ -119,6 +119,7 @@
 		        index = 0,
 		        _t;
 
+		    tpl = tpl.replace(/[\r\t\n]/g, '');
 			tpl.replace(reg, function(match, source, offset) {
 		        sources += (_t = tpl.slice(index, offset)) ? 'r.push("' + _t.replace(/"/g, '\\"') + '");\n' : '';
 		        sources += source.match(regOut) ? source + '\n' : 'r.push(' + source + ');\n';
